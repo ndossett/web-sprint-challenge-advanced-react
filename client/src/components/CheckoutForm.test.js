@@ -1,5 +1,6 @@
 import React from "react";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import CheckoutForm from "./CheckoutForm";
 
 // Write up the two tests here and make sure they are testing what the title shows
@@ -8,39 +9,41 @@ test("form header renders", () => {
     render(<CheckoutForm />)
 });
 
-test("form shows success message on submit with form details", () => {
+test("form shows success message on submit with form details", async () => {
     render(<CheckoutForm />)
 
-    const inputFirstName =  screen.getByLabelText(/first name:/i)
-    const inputLastName =  screen.getByLabelText(/last name:/i)
-    const inputAddress =  screen.getByLabelText(/address:/i)
-    const inputCity =  screen.getByLabelText(/city:/i)
-    const inputState =  screen.getByLabelText(/state:/i)
-    const inputZip =  screen.getByLabelText(/zip:/i)
+    const FirstNameInput =  screen.getByLabelText(/first Name:/i)
+    const LastNameInput =  screen.getByLabelText(/last Name:/i)
+    const AddressInput =  screen.getByLabelText(/address:/i)
+    const CityInput =  screen.getByLabelText(/city:/i)
+    const StateInput =  screen.getByLabelText(/state:/i)
+    const ZipInput =  screen.getByLabelText(/zip:/i)
 
-    fireEvent.change(inputFirstName,{target:{ value:"Niki", name:"firstName"}})
-    fireEvent.change(inputLastName,{target:{ value:"Dossett", name:"lastName"}})
-    fireEvent.change(inputAddress,{target:{ value:"1348 Woodmere Ln", name:"address"}})
-    fireEvent.change(inputCity,{target:{ value:"Fort Myers", name:"city"}})
-    fireEvent.change(inputState,{target:{ value:"Fl", name:"state"}})
-    fireEvent.change(inputZip,{target:{ value:"33919", name:"zip"}})
+    userEvent.type(FirstNameInput, "Niki")
+    userEvent.type(LastNameInput, "Dossett")
+    userEvent.type(AddressInput, "1348 Woodmere Ln")
+    userEvent.type(CityInput, "Fort Myers")
+    userEvent.type(StateInput, "Fl")
+    userEvent.type(ZipInput, "33919")
 
-    expect(inputFirstName).toHaveValue('Niki')
-    expect(inputLastName).toHaveValue('Dossett')
-    expect(inputAddress).toHaveValue('1348 Woodmere Ln')
-    expect(inputCity).toHaveValue('Fort Myers')
-    expect(inputState).toHaveValue('Fl')
-    expect(inputZip).toHaveValue('33919')
+    expect(FirstNameInput).toHaveValue('Niki')
+    expect(LastNameInput).toHaveValue('Dossett')
+    expect(AddressInput).toHaveValue('1348 Woodmere Ln')
+    expect(CityInput).toHaveValue('Fort Myers')
+    expect(StateInput).toHaveValue('Fl')
+    expect(ZipInput).toHaveValue('33919')
 
-    const submit = screen.getByRole('button')
+    const button = screen.getByRole('button')
 
-    fireEvent.click(submit)
+    userEvent.click(button)
 
-    const successMessage = screen.getByTestId('successMesssage')
-    expect(successMessage).toBeInTheDocument()
-
-    within(successMessage).getByText(/niki dossett/i)
-    within(successMessage).getByText(/1348 Woodmere Ln/i)
-    within(successMessage).getByText(/Fort Myers, fl 33919/i)
+    const successMessage = await screen.findByText('You have ordered some plants! Woo-hoo!')
+    const successMessageName = await screen.findByText('Niki Dossett')
+    const successMessageAddress = await screen.findByText('1348 Woodmere Ln')
+    const successMessageAddress2 = await screen.findByText('Fort Myers, Fl 33919')
+    expect(successMessage)
+    expect(successMessageName)
+    expect(successMessageAddress)
+    expect(successMessageAddress2)
 
 });
