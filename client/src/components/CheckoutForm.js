@@ -23,7 +23,6 @@ const CheckoutForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setShowSuccessMessage(true);
-    clearForm();
   };
 
   return (
@@ -66,7 +65,7 @@ const CheckoutForm = () => {
           Zip:
           <input name="zip" value={values.zip} onChange={handleChanges} />
         </label>
-        <button onClick={clearForm}>Checkout</button>
+        <button>Checkout</button>
       </form>
 
       {showSuccessMessage && (
