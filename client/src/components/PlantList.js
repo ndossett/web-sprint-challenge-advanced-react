@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, Component } from "react";
 import axios from "axios";
 
 export default class PlantList extends Component {
@@ -10,17 +10,13 @@ export default class PlantList extends Component {
   //   - fetch data from the server endpoint - http://localhost:3333/plants
   //   - set the returned plants array to this.state.plants
   componentDidMount() {
-    fetch('http://localhost:3333/plants')
-    .then((res) => {
-      return (res)
+    axios.get('http://localhost:3333/plants')
+    .then(res => {
+      this.setState({plants: res.data.plantsData})
     })
-    .then((res) => {
-      this.setState({
-        plants: res.data
-      })
-      console.log(res.data)
+    .catch(err => {
+      console.log(err)
     })
-    .catch(err => console.log(err))
   }
   /*********  DON'T CHANGE ANYTHING IN THE RENDER FUNCTION *********/
   render() {
